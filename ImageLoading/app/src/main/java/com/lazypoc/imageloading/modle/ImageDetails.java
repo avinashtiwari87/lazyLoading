@@ -1,7 +1,7 @@
 package com.lazypoc.imageloading.modle;
 
 /**
- * Created by wipro on 30/11/17.
+ * Created by avinash on 30/11/17.
  */
 
 public class ImageDetails {

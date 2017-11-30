@@ -51,10 +51,6 @@ public class MainActivity extends AppCompatActivity implements HttpConnection.Ht
             public void onRefresh() {
                 HttpConnectionTask httpConnectionTask = new HttpConnectionTask(MainActivity.this);
                 httpConnectionTask.execute(BaseURL);
-
-//                int statusCode = mHttpConnection.getHttpGetConnection(BaseURL);
-//                DataAdapter adapter = new DataAdapter(getApplicationContext(), mImageList);
-//                mRecyclerView.setAdapter(adapter);
                 Toast.makeText(MainActivity.this, "Image List Refreshed.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -68,10 +64,6 @@ public class MainActivity extends AppCompatActivity implements HttpConnection.Ht
 
         HttpConnectionTask httpConnectionTask = new HttpConnectionTask(MainActivity.this);
         httpConnectionTask.execute(BaseURL);
-        //int statusCode = mHttpConnection.getHttpGetConnection(BaseURL);
-//        ArrayList<ImageDetails> androidVersions = prepareData();
-//        DataAdapter adapter = new DataAdapter(getApplicationContext(), mImageList);
-//        mRecyclerView.setAdapter(adapter);
 
     }
 
@@ -106,9 +98,6 @@ public class MainActivity extends AppCompatActivity implements HttpConnection.Ht
     }
 
     private String replaceWithHttps(String imageHref) {
-        StringBuilder url;
-//        url="https"+imageHref.substring(4,imageHref.length());
-//Log.d("avinash","url=");
         return "https"+imageHref.substring(4,imageHref.length());
     }
 
