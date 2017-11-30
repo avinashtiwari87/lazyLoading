@@ -141,6 +141,8 @@ public class MainActivity extends AppCompatActivity implements HttpConnection.Ht
             mDialog.dismiss();
             DataAdapter adapter = new DataAdapter(getApplicationContext(), mImageList);
             mRecyclerView.setAdapter(adapter);
+            //getActionBar().setTitle(""+mTitle);
+            getSupportActionBar().setTitle(""+mTitle);
         }
     }
 
