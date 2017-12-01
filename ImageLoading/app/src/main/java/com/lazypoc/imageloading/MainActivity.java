@@ -2,6 +2,8 @@ package com.lazypoc.imageloading;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -49,9 +51,13 @@ public class MainActivity extends AppCompatActivity implements HttpConnection.Ht
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                HttpConnectionTask httpConnectionTask = new HttpConnectionTask(MainActivity.this);
-                httpConnectionTask.execute(BaseURL);
-                Toast.makeText(MainActivity.this, "Image List Refreshed.", Toast.LENGTH_SHORT).show();
+                if (checkInternetConnection(MainActivity.this)) {
+                    HttpConnectionTask httpConnectionTask = new HttpConnectionTask(MainActivity.this);
+                    httpConnectionTask.execute(BaseURL);
+                    Toast.makeText(MainActivity.this, "Image List Refreshed.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, " Please check your internate connection in device ", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -61,9 +67,12 @@ public class MainActivity extends AppCompatActivity implements HttpConnection.Ht
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(layoutManager);
-
-        HttpConnectionTask httpConnectionTask = new HttpConnectionTask(MainActivity.this);
-        httpConnectionTask.execute(BaseURL);
+        if (checkInternetConnection(MainActivity.this)) {
+            HttpConnectionTask httpConnectionTask = new HttpConnectionTask(MainActivity.this);
+            httpConnectionTask.execute(BaseURL);
+        } else {
+            Toast.makeText(MainActivity.this, " Please check your internate connection in device ", Toast.LENGTH_LONG).show();
+        }
 
     }
 
@@ -79,8 +88,6 @@ public class MainActivity extends AppCompatActivity implements HttpConnection.Ht
         try {
             pageDetails = new JSONObject(resultData);
             mTitle = pageDetails.getString("title");
-            //getActionBar().setTitle(""+mTitle);
-            //getSupportActionBar().setTitle(""+mTitle);
             imageList = pageDetails.getJSONArray("rows");
             int size = imageList.length();
             for (int i = 0; i < size; i++) {
@@ -98,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements HttpConnection.Ht
     }
 
     private String replaceWithHttps(String imageHref) {
-        return "https"+imageHref.substring(4,imageHref.length());
+        return "https" + imageHref.substring(4, imageHref.length());
     }
 
     @Override
@@ -107,6 +114,20 @@ public class MainActivity extends AppCompatActivity implements HttpConnection.Ht
 
     }
 
+    private static boolean checkInternetConnection(Context context) {
+        // get Connectivity Manager object to check connection
+        ConnectivityManager connec = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
+        final NetworkInfo activeNetwork = connec.getActiveNetworkInfo();
+        if (activeNetwork != null && activeNetwork.isConnected()) {
+            // notify user you are online
+            Toast.makeText(context, " Connected ", Toast.LENGTH_LONG).show();
+            return true;
+        } else {
+            // notify user you are not online
+            Toast.makeText(context, " Not Connected ", Toast.LENGTH_LONG).show();
+            return false;
+        }
+    }
 
     private class HttpConnectionTask extends AsyncTask<String, Void, Integer> {
         Context mContext = null;
@@ -118,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements HttpConnection.Ht
         public HttpConnectionTask(Context context) {
             mContext = context;
             mHttpConnection = new HttpConnection((HttpConnection.HttpUrlConnectionResponce) mContext, mContext);
-            mDialog = new ProgressDialog( mContext);
+            mDialog = new ProgressDialog(mContext);
         }
 
         @Override
@@ -142,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements HttpConnection.Ht
             DataAdapter adapter = new DataAdapter(getApplicationContext(), mImageList);
             mRecyclerView.setAdapter(adapter);
             //getActionBar().setTitle(""+mTitle);
-            getSupportActionBar().setTitle(""+mTitle);
+            getSupportActionBar().setTitle("" + mTitle);
         }
     }
 

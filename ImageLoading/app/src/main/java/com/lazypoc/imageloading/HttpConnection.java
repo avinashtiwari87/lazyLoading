@@ -12,15 +12,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by Avinash on 3/14/2016.
+ * Created by Avinash on 11/30/2017.
  */
 
 public class HttpConnection {
 
     private static final String TAG = "Http Connection";
-
-
-    private String[] blogTitles;
     HttpUrlConnectionResponce mHttpUrlConnectionResponce = null;
     Context mContext;
 
@@ -28,7 +25,6 @@ public class HttpConnection {
         mHttpUrlConnectionResponce = connectionResponce;
         mContext = context;
     }
-//            new AsyncHttpTask().execute(url);
 
     public int getHttpGetConnection(String url) {
         InputStream inputStream = null;
